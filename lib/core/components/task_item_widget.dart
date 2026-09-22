@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:tasky/core/enums/task_item_actions_enums.dart';
 import 'package:tasky/core/widgets/custom_text_form_field.dart';
 
-import '../core/services/preferences_manager.dart';
-import '../core/theme/theme_controller.dart';
-import '../core/widgets/custom_check_box.dart';
-import '../models/task_model.dart';
+import '../services/preferences_manager.dart';
+import '../theme/theme_controller.dart';
+import '../widgets/custom_check_box.dart';
+import '../../models/task_model.dart';
 
 class TaskItemWidget extends StatelessWidget {
   TaskItemWidget({

@@ -1,17 +1,17 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:tasky/widgets/task_list_widget.dart';
-import '../core/services/preferences_manager.dart';
-import '../models/task_model.dart';
+import 'package:tasky/core/components/task_list_widget.dart';
+import '../../core/services/preferences_manager.dart';
+import '../../models/task_model.dart';
 
-class CompleteTasksScreen extends StatefulWidget {
-  const CompleteTasksScreen({super.key});
+class TasksScreen extends StatefulWidget {
+  const TasksScreen({super.key});
 
   @override
-  State<CompleteTasksScreen> createState() => _CompleteTasksScreenState();
+  State<TasksScreen> createState() => _TasksScreenState();
 }
 
-class _CompleteTasksScreenState extends State<CompleteTasksScreen> {
+class _TasksScreenState extends State<TasksScreen> {
   void initState() {
     super.initState();
 
@@ -19,8 +19,7 @@ class _CompleteTasksScreenState extends State<CompleteTasksScreen> {
   }
 
   bool isCheck = false;
-
-  List<TaskModel> completedTasks = [];
+  List<TaskModel> todoTasks = [];
 
   void _loadTask() async {
     final finalTask = PreferencesManager().getString("tasks");
@@ -28,9 +27,9 @@ class _CompleteTasksScreenState extends State<CompleteTasksScreen> {
     if (finalTask != null) {
       final taskAfterDecode = jsonDecode(finalTask) as List<dynamic>;
       setState(() {
-        completedTasks = taskAfterDecode
+        todoTasks = taskAfterDecode
             .map((element) => TaskModel.fromJson(element))
-            .where(((element) => element.isDone))
+            .where(((element) => element.isDone == false))
             .toList();
       });
     }
@@ -49,7 +48,7 @@ class _CompleteTasksScreenState extends State<CompleteTasksScreen> {
       tasks.removeWhere((e) => e.id == id);
     }
     setState(() {
-      completedTasks.removeWhere((task) => task.id == id);
+      todoTasks.removeWhere((task) => task.id == id);
     });
 
     final updatedTask = tasks.map((element) => element.toMap()).toList();
@@ -64,7 +63,7 @@ class _CompleteTasksScreenState extends State<CompleteTasksScreen> {
         Padding(
           padding: const EdgeInsets.all(18),
           child: Text(
-            'Completed Tasks',
+            'To Do Tasks',
             style: Theme.of(context).textTheme.labelLarge,
           ),
         ),
@@ -72,16 +71,16 @@ class _CompleteTasksScreenState extends State<CompleteTasksScreen> {
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: TaskListWidget(
-              emptyMessage: "No Complete Tasks Found",
-              tasks: completedTasks,
+              emptyMessage: "No Tasks Found",
+              tasks: todoTasks,
               onTap: (value, index) async {
-                final tappedTask = completedTasks[index!];
+                final tappedTask = todoTasks[index!];
                 setState(() {
                   tappedTask.isDone = value ?? false;
-                  completedTasks.removeAt(index);
+                  todoTasks.removeAt(index);
                 });
 
-                final allData = PreferencesManager().getString("tasks");
+                final allData = PreferencesManager().getString('tasks');
 
                 if (allData != null) {
                   List<TaskModel> allDataList = (jsonDecode(allData) as List)
@@ -95,19 +94,18 @@ class _CompleteTasksScreenState extends State<CompleteTasksScreen> {
                   if (newIndex != -1) {
                     allDataList[newIndex] = tappedTask;
                     await PreferencesManager().setString(
-                      "tasks",
+                      'tasks',
                       jsonEncode(allDataList),
-
                     );
-                    _loadTask();
                   }
                 }
               },
               onDelete: (int? id) {
                 _deleteTask(id);
-              }, onEdit: (){
-              _loadTask();
-            },
+              },
+              onEdit: () {
+                _loadTask();
+              },
             ),
           ),
         ),

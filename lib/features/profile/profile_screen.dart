@@ -2,11 +2,11 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:tasky/screens/user_details_screen.dart';
-import 'package:tasky/screens/welcome_screen.dart';
-import '../core/services/preferences_manager.dart';
-import '../core/theme/theme_controller.dart';
-import '../core/widgets/custom_svg_picture.dart';
+import 'package:tasky/features/profile/user_details_screen.dart';
+import 'package:tasky/features/welcome/welcome_screen.dart';
+import '../../core/services/preferences_manager.dart';
+import '../../core/theme/theme_controller.dart';
+import '../../core/widgets/custom_svg_picture.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
