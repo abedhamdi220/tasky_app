@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tasky/core/constants/storage_key.dart';
 import 'package:tasky/core/theme/dark_theme.dart';
 import 'package:tasky/core/theme/light_theme.dart';
 import 'package:tasky/features/navigation/main_screen.dart';
@@ -11,7 +12,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await PreferencesManager().init();
   ThemeController().init();
-  String? userName = PreferencesManager().getString("userName");
+  String? userName = PreferencesManager().getString(StorageKey.username);
   runApp(MyApp(userName: userName));
 }
 

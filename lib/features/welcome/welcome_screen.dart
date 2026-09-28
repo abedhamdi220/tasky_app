@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:tasky/core/constants/storage_key.dart';
 import 'package:tasky/core/widgets/custom_svg_picture.dart';
 import 'package:tasky/core/widgets/custom_text_form_field.dart';
 import 'package:tasky/features/navigation/main_screen.dart';
@@ -100,7 +100,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                           onPressed: () async {
                             if (_key.currentState?.validate() ?? false) {
                               await PreferencesManager().setString(
-                                "userName",
+                                StorageKey.username,
                                 controller.value.text,
                               );
                               Navigator.pushReplacement(

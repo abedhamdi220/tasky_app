@@ -6,6 +6,7 @@ import 'package:tasky/models/task_model.dart';
 import 'package:tasky/features/add_task/add_task_screen.dart';
 import 'package:tasky/features/home/components/achieved_tasks_widget.dart';
 import 'package:tasky/features/home/components/high_priority_tasks_widget.dart';
+import '../../core/constants/storage_key.dart';
 import '../../core/services/preferences_manager.dart';
 import '../../core/widgets/custom_svg_picture.dart';
 import 'components/sliver_task_list_widget.dart';
@@ -38,7 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void _loadUserName() async {
     setState(() {
       userImagePath = PreferencesManager().getString("image_path");
-      userName = PreferencesManager().getString("userName");
+      userName = PreferencesManager().getString(StorageKey.username);
       motivationQuote = PreferencesManager().getString("motivation_quote");
     });
   }
