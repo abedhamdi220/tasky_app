@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import '../../core/constants/storage_key.dart';
 import '../../core/services/preferences_manager.dart';
 import '../../models/task_model.dart';
 import '../../core/components/task_list_widget.dart';
@@ -22,7 +23,7 @@ class _HighPriorityScreenState extends State<HighPriorityScreen> {
   List<TaskModel> highPriorityTasks = [];
 
   void _loadTask() async {
-    final finalTask = PreferencesManager().getString("tasks");
+    final finalTask = PreferencesManager().getString(StorageKey.tasks);
 
     if (finalTask != null) {
       final taskAfterDecode = jsonDecode(finalTask) as List<dynamic>;
@@ -41,7 +42,7 @@ class _HighPriorityScreenState extends State<HighPriorityScreen> {
     List<TaskModel> tasks = [];
     if (id == null) return;
 
-    final finalTask = PreferencesManager().getString("tasks");
+    final finalTask = PreferencesManager().getString(StorageKey.tasks);
     if (finalTask != null) {
       final taskAfterDecode = jsonDecode(finalTask) as List<dynamic>;
       tasks = taskAfterDecode
@@ -75,7 +76,7 @@ class _HighPriorityScreenState extends State<HighPriorityScreen> {
               highPriorityTasks.removeAt(index);
             });
 
-            final allData = PreferencesManager().getString("tasks");
+            final allData = PreferencesManager().getString(StorageKey.tasks);
 
             if (allData != null) {
               List<TaskModel> allDataList = (jsonDecode(allData) as List)

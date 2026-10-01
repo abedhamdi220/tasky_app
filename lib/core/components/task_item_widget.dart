@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:tasky/core/enums/task_item_actions_enums.dart';
 import 'package:tasky/core/widgets/custom_text_form_field.dart';
 
+import '../constants/storage_key.dart';
 import '../services/preferences_manager.dart';
 import '../theme/theme_controller.dart';
 import '../widgets/custom_check_box.dart';
@@ -222,7 +223,7 @@ class TaskItemWidget extends StatelessWidget {
                         onPressed: () async {
                           if (key.currentState?.validate() ?? false) {
                             final taskJson = PreferencesManager().getString(
-                              "tasks",
+                              StorageKey.tasks,
                             );
                             List<dynamic> listTasks = [];
                             if (taskJson != null) {
@@ -242,7 +243,7 @@ class TaskItemWidget extends StatelessWidget {
                             final index = listTasks.indexOf(item);
                             listTasks[index] = newModel.toMap();
                             final taskEncode = jsonEncode(listTasks);
-                            await PreferencesManager().setString("tasks", taskEncode);
+                            await PreferencesManager().setString(StorageKey.tasks, taskEncode);
 
                             Navigator.of(context).pop(true);
                           }
