@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tasky/core/constants/storage_key.dart';
 import 'package:tasky/core/theme/dark_theme.dart';
 import 'package:tasky/core/theme/light_theme.dart';
@@ -7,6 +8,7 @@ import 'package:tasky/features/welcome/welcome_screen.dart';
 
 import 'core/services/preferences_manager.dart';
 import 'core/theme/theme_controller.dart';
+import 'features/tasks/controller/tasks_controller.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,12 +28,15 @@ class MyApp extends StatelessWidget {
     return ValueListenableBuilder<ThemeMode>(
       valueListenable: ThemeController.themeNotifier,
       builder: (context, ThemeMode themeMode, Widget? child) {
-        return MaterialApp(
-          debugShowCheckedModeBanner: false,
-          theme: lightTheme,
-          darkTheme: darkTheme,
-          themeMode: themeMode,
-          home: userName == null ? WelcomeScreen() : MainScreen(),
+         return ChangeNotifierProvider<TasksController>(
+          create: (_) => TasksController()..init(),
+          child: MaterialApp(
+            debugShowCheckedModeBanner: false,
+            theme: lightTheme,
+            darkTheme: darkTheme,
+            themeMode: themeMode,
+            home: userName == null ? WelcomeScreen() : MainScreen(),
+          ),
         );
       },
     );

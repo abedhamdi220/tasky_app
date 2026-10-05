@@ -241,7 +241,7 @@ class TaskItemWidget extends StatelessWidget {
                               (e) => e['id'] == model.id,
                             );
                             final index = listTasks.indexOf(item);
-                            listTasks[index] = newModel.toMap();
+                            listTasks[index] = newModel.toJson();
                             final taskEncode = jsonEncode(listTasks);
                             await PreferencesManager().setString(StorageKey.tasks, taskEncode);
 

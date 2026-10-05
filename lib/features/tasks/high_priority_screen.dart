@@ -1,106 +1,34 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import '../../core/constants/storage_key.dart';
-import '../../core/services/preferences_manager.dart';
-import '../../models/task_model.dart';
+import 'package:provider/provider.dart';
+import 'package:tasky/features/tasks/controller/tasks_controller.dart';
 import '../../core/components/task_list_widget.dart';
 
-class HighPriorityScreen extends StatefulWidget {
+class HighPriorityScreen extends StatelessWidget {
   const HighPriorityScreen({super.key});
 
   @override
-  State<HighPriorityScreen> createState() => _HighPriorityScreenState();
-}
-
-class _HighPriorityScreenState extends State<HighPriorityScreen> {
-  void initState() {
-    super.initState();
-
-    _loadTask();
-  }
-
-  bool isCheck = false;
-  List<TaskModel> highPriorityTasks = [];
-
-  void _loadTask() async {
-    final finalTask = PreferencesManager().getString(StorageKey.tasks);
-
-    if (finalTask != null) {
-      final taskAfterDecode = jsonDecode(finalTask) as List<dynamic>;
-      setState(() {
-        highPriorityTasks = taskAfterDecode
-            .map((element) => TaskModel.fromJson(element))
-            .where(((element) => element.isHighPriority))
-            .toList()
-            .reversed
-            .toList();
-      });
-    }
-  }
-
-  _deleteTask(int? id) async {
-    List<TaskModel> tasks = [];
-    if (id == null) return;
-
-    final finalTask = PreferencesManager().getString(StorageKey.tasks);
-    if (finalTask != null) {
-      final taskAfterDecode = jsonDecode(finalTask) as List<dynamic>;
-      tasks = taskAfterDecode
-          .map((element) => TaskModel.fromJson(element))
-          .toList();
-      tasks.removeWhere((e) => e.id == id);
-    }
-    setState(() {
-      highPriorityTasks.removeWhere((task) => task.id == id);
-    });
-
-    final updatedTask = tasks
-        .map((element) => element.toMap())
-        .toList();
-    await PreferencesManager().setString('tasks', jsonEncode(updatedTask));
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final controller = context.read<TasksController>();
     return Scaffold(
       appBar: AppBar(title: Text("High Priority Tasks")),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: TaskListWidget(
-          emptyMessage: "No Tasks Found",
-          tasks: highPriorityTasks,
-          onTap: (value, index) async {
-            final tappedTask = highPriorityTasks[index!];
-            setState(() {
-              tappedTask.isDone = value ?? false;
-              highPriorityTasks.removeAt(index);
-            });
-
-            final allData = PreferencesManager().getString(StorageKey.tasks);
-
-            if (allData != null) {
-              List<TaskModel> allDataList = (jsonDecode(allData) as List)
-                  .map((element) => TaskModel.fromJson(element))
-                  .toList();
-
-              final newIndex = allDataList.indexWhere(
-                (e) => e.id == tappedTask.id,
-              );
-
-              if (newIndex != -1) {
-                allDataList[newIndex] = tappedTask;
-                await PreferencesManager().setString(
-                  'tasks',
-                  jsonEncode(allDataList),
-                );
-              }
-            }
+        child: Consumer<TasksController>(
+          builder: (BuildContext context, value, Widget? child) {
+            return TaskListWidget(
+              emptyMessage: "No Tasks Found",
+              tasks: value.highPriorityTasks,
+              onTap: (value, index) async {
+                controller.doneHighPriorityTask(value, index);
+              },
+              onDelete: (int? id) {
+                controller.deleteTask(id);
+              },
+              onEdit: () {
+                controller.init();
+              },
+            );
           },
-          onDelete: (int? id) {
-            _deleteTask(id);
-          }, onEdit: (){
-            _loadTask();
-        },
         ),
       ),
     );

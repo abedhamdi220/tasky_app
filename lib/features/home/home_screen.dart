@@ -6,6 +6,7 @@ import 'package:tasky/features/add_task/add_task_screen.dart';
 import 'package:tasky/features/home/components/achieved_tasks_widget.dart';
 import 'package:tasky/features/home/components/high_priority_tasks_widget.dart';
 import '../../core/widgets/custom_svg_picture.dart';
+import '../tasks/controller/tasks_controller.dart';
 import 'components/sliver_task_list_widget.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -155,7 +156,7 @@ class HomeScreen extends StatelessWidget {
                     ),
                   );
                   if (result != null && result) {
-                    controllerContext.read<HomeController>().loadTask();
+                    controllerContext.read<TasksController>().init();
                   }
                 },
                 label: Text("Add New Task"),
